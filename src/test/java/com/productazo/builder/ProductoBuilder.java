@@ -32,4 +32,8 @@ public class ProductoBuilder {
         entityManager.detach(instance);
         return instance;
     }
+    
+    public Producto build() {
+        return instance;
+    }
 }

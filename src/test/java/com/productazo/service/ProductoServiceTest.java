@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,5 +35,24 @@ public class ProductoServiceTest {
         List<Producto> productos = productoService.buscarTodos();
         
         assertThat(productos).isEmpty();
+    }
+    
+    @Test
+    public void crear_conProductoACrear_guardaProducto() {
+        Producto productoNuevo = ProductoBuilder.completo().build();
+        
+        Producto productoPersistido = productoService.crear(productoNuevo);
+        
+        assertThat(productoPersistido).isNotNull();
+        assertThat(productoPersistido.getId()).isNotNull();
+    }
+    
+    @Test
+    public void crear_conProductoNulo_lanzaExcepcion() {
+        Producto productoNuevo = null;
+        
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> productoService.crear(productoNuevo))
+                .withMessage("El producto a crear no puede ser nulo.");
     }
 }
